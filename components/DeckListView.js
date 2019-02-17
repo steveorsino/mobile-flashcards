@@ -1,16 +1,47 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/colors'
 import { getDecks } from '../utils/helpers'
 
+
+
 class DeckListView extends Component {
-  componentDidMount() {
-    getDecks()
+  state = {
+    decks: undefined,
+
   }
+
+
+  componentDidMount() {
+    console.log('State Text = ',this.state.text);
+    
+    getDecks()
+      .then((value) => {
+        this.setState( {
+          decks: value
+        })
+      })
+    
+     
+    // console.log('App: componentDidMount. Decks = ',decks);
+    // console.log('State Decks = ',this.state.decks);
+    
+  }
+
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.testText}>Deck View</Text>
+         {this.state.decks === undefined
+          ? <View>
+              <Text>You have no decks</Text>
+            </View>
+          : Object.keys(this.state.decks).map((key) => {
+            return <Text key={key} style={styles.testText}>Deck {key}</Text>
+          })
+          
+        } 
+
       </View>
     )
   }
@@ -27,6 +58,10 @@ const styles = StyleSheet.create({
   testText: {
     color: TEXT_COLOR,
     fontSize: 30
+  },
+  addBtn: {
+    borderColor: 'grey',
+    borderWidth: 1,
   }
 })
 
