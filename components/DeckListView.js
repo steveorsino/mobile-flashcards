@@ -37,7 +37,12 @@ class DeckListView extends Component {
               <Text>You have no decks</Text>
             </View>
           : Object.keys(this.state.decks).map((key) => {
-            return <Text key={key} style={styles.testText}>Deck {key}</Text>
+            return (
+              <View key={key}>
+                <Text  style={styles.testText}>Deck {key}</Text>
+                <Text  style={styles.testText}>cards {this.state.decks[key].questions.length}</Text>
+              </View>
+              )
           })
           
         } 
