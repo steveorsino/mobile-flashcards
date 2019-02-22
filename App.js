@@ -8,6 +8,7 @@ import { APP_COLOR } from './utils/colors'
 import { Constants } from 'expo'
 import DeckListView from './components/DeckListView'
 import NewDeck from './components/NewDeck'
+import DeckView from './components/DeckView'
 
 AppStatusBar = ({ backgroundColor, ...props }) => {
   return (
@@ -64,6 +65,9 @@ const MainNavigator = StackNavigator({
         backgroundColor: APP_COLOR,
       }
     }
+  },
+  DeckView: {
+    screen: DeckView
   }
 })
 
