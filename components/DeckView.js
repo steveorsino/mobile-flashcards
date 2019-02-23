@@ -21,6 +21,10 @@ export class DeckView extends Component {
       })
       .catch((err) => console.log(err))
   }
+
+  addQuestion = (id) => {
+
+  }
   render() {
     return (
       <View style={styles.container}>
