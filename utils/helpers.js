@@ -15,7 +15,6 @@ export async function getDeck(id) {
   try {
     const decks = await AsyncStorage.getItem('DECKS')
     const objDecks = JSON.parse(decks)
-    console.log('objDecks: ',objDecks)
     return objDecks[id];
   } catch {
     console.log('error')  
@@ -49,7 +48,15 @@ export const createDeck = (title) => {
   })
 }
 
-export const addCard = (title, card) => {
-  
+export async function addCard (title, card) {
+  try {
+    const decks = await AsyncStorage.getItem('DECKS')
+    const objDecks = JSON.parse(decks)
+    objDecks[title].questions.push(card)
+    console.log('after pushed question: ', objDecks)
+    return AsyncStorage.setItem('DECKS', JSON.stringify(objDecks))
+  } catch {
+    console.log('error') 
+  }
 }
 

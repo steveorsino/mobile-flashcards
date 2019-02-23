@@ -29,7 +29,17 @@ export class NewQuestionView extends Component {
       this.state.incorrectAns == ''
     ) return alert('All fields Must be filled!')
     
+    const card = {
+      question: this.state.question,
+      correctAnswer: this.state.correctAns,
+      incorrectAns: this.state.incorrectAns
+    }
 
+    addCard(this.state.deckToMod, card)
+      .then(() => {
+        this.props.navigation.navigate('DeckView')
+        //redirect
+      })
 
   }
 
@@ -50,10 +60,8 @@ export class NewQuestionView extends Component {
     })
   }
   render() {
-
-
     return (
-      <View style={styles.container}>
+      <View>
       {
         this.state.deckToMod === ''
         ? <Text>Loading...</Text>
