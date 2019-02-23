@@ -23,7 +23,10 @@ export class DeckView extends Component {
   }
 
   addQuestion = (id) => {
-
+    AsyncStorage.setItem('ADD_QUESTION_DECK', JSON.stringify(id))
+      .then(() => {
+        this.props.navigation.navigate('NewQuestionView')
+      })
   }
   render() {
     return (

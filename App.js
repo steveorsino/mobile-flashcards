@@ -9,6 +9,7 @@ import { Constants } from 'expo'
 import DeckListView from './components/DeckListView'
 import NewDeck from './components/NewDeck'
 import DeckView from './components/DeckView'
+import NewQuestionView from './components/NewQuestionView'
 
 AppStatusBar = ({ backgroundColor, ...props }) => {
   return (
@@ -68,6 +69,9 @@ const MainNavigator = StackNavigator({
   },
   DeckView: {
     screen: DeckView
+  },
+  NewQuestionView: {
+    screen: NewQuestionView
   }
 })
 

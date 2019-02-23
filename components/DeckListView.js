@@ -11,20 +11,13 @@ class DeckListView extends Component {
   }
 
 
-  componentDidMount() {
-    console.log('State Text = ',this.state.text);
-    
+  componentDidMount() {    
     getDecks()
       .then((value) => {
         this.setState( {
           decks: value
         })
       })
-    
-     
-    // console.log('App: componentDidMount. Decks = ',decks);
-    // console.log('State Decks = ',this.state.decks);
-    
   }
 
   goToDeck = (key) => {

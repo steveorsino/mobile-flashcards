@@ -49,7 +49,7 @@ export const createDeck = (title) => {
   })
 }
 
-addCard = () => {
-
+export const addCard = (title, card) => {
+  
 }
 
