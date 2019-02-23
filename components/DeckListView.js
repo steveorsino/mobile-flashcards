@@ -28,7 +28,7 @@ class DeckListView extends Component {
   }
 
   goToDeck = (key) => {
-    AsyncStorage.setItem('VIEW', JSON.stringify(key))
+    AsyncStorage.setItem('DECK', JSON.stringify(key))
       .then(() => {
         this.props.navigation.navigate('DeckView')
       })
