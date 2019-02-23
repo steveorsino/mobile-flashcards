@@ -10,6 +10,7 @@ import DeckListView from './components/DeckListView'
 import NewDeck from './components/NewDeck'
 import DeckView from './components/DeckView'
 import NewQuestionView from './components/NewQuestionView'
+import QuizView from './components/QuizView'
 
 AppStatusBar = ({ backgroundColor, ...props }) => {
   return (
@@ -72,6 +73,9 @@ const MainNavigator = StackNavigator({
   },
   NewQuestionView: {
     screen: NewQuestionView
+  },
+  QuizView: {
+    screen: QuizView
   }
 })
 

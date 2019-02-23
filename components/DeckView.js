@@ -28,6 +28,9 @@ export class DeckView extends Component {
         this.props.navigation.navigate('NewQuestionView')
       })
   }
+  goToQuiz = () => {
+    this.props.navigation.navigate('QuizView')
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -42,7 +45,10 @@ export class DeckView extends Component {
                 <Text>Add Card</Text>
               </TouchableOpacity>
               {this.state.deckDetails.questions.length > 0 &&
-                <TouchableOpacity>
+                <TouchableOpacity
+                style={styles.addBtn}
+                onPress={() => this.goToQuiz()}
+                >
                   <Text>Start Quiz</Text>
                 </TouchableOpacity>}
             </View>
