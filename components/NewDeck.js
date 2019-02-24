@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/colors'
-import { createDeck } from '../utils/helpers'
+import { createDeck, getDecks } from '../utils/helpers'
 
 export class NewDeck extends Component {
   state = {
@@ -9,7 +9,6 @@ export class NewDeck extends Component {
   }
   handleTextChange (text) {
     this.setState({text})
-
     console.log(this.state.text)
   }
 
@@ -17,9 +16,17 @@ export class NewDeck extends Component {
     if (this.state.text.length > 0) {
       console.log(this.state.text)
       createDeck(this.state.text)
+        .then(() => {
+          alert('YPU ADDED A DECK')
+          this.props.navigation.navigate('Home')
+        })
+      
+      //this.props.navigation.navigate('Home')
     } else {
-      console.log('no text in state!!!!')
+      alert('You must enter a name for your new deck')
     }
+
+
   }
   render() {
     return (

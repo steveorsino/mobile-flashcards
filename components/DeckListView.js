@@ -9,14 +9,14 @@ class DeckListView extends Component {
   state = {
     decks: undefined,
   }
-
-
-  componentDidMount() {    
+  componentDidMount() {
+    console.log('componentDidMount') 
     getDecks()
       .then((value) => {
         this.setState( {
           decks: value
         })
+        console.log('All Decks = ',this.state.decks)
       })
   }
 
@@ -27,7 +27,17 @@ class DeckListView extends Component {
       })
   }
 
-
+  removeDeck = (key) => {
+    AsyncStorage.getItem('DECKS')
+      .then((value) => {
+        const decks = JSON.parse(value)
+        delete decks[key]
+        AsyncStorage.setItem('DECKS', JSON.stringify(decks))
+          .then(() => {
+            this.setState({decks})
+          })
+      })
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -37,15 +47,18 @@ class DeckListView extends Component {
             </View>
           : Object.keys(this.state.decks).map((key) => {
             return (
-              <TouchableOpacity key={key} onPress={() => this.goToDeck(key)}>
-                <Text  style={styles.testText}>Deck {key}</Text>
-                <Text  style={styles.testText}>cards {this.state.decks[key].questions.length}</Text>
-              </TouchableOpacity>
+              <View style={styles.addBtn} key={key} >
+                <TouchableOpacity  onPress={() => this.goToDeck(key)}>
+                  <Text  style={styles.testText}>Deck </Text>
+                  <Text  style={styles.testText}>cards {this.state.decks[key].questions.length}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity  onPress={() => this.removeDeck(key)}>
+                  <Text>Remove Deck</Text>
+                </TouchableOpacity>
+              </View>
               )
           })
-          
         } 
-
       </View>
     )
   }
@@ -66,6 +79,9 @@ const styles = StyleSheet.create({
   addBtn: {
     borderColor: 'grey',
     borderWidth: 1,
+    width:'100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 })
 

@@ -29,13 +29,21 @@ export class QuizView extends Component {
   }
   answer = (ans) => {
     if ((ans === this.state.showCorrect && ans === 1) || 
-        (ans === this.state.showCorrect && ans === 0))
-      this.setState({numCorrect: this.state.numCorrect + 1})
-
+        (ans === this.state.showCorrect && ans === 0)) {
+          console.log('Answer: ',ans)
+          console.log('Showing: ',this.state.showCorrect)
+          this.setState({numCorrect: this.state.numCorrect + 1})
+        }
+      
+    console.log("Number correct: ", this.state.numCorrect)
     this.setState({
       cardIndex: this.state.cardIndex + 1,
-      showCorrect: this.state.showCorrect + 1
+      showCorrect: Math.round(Math.random())
     })
+  }
+
+  back = () => {
+    this.props.navigation.navigate('Home')
   }
 
   render() {
@@ -52,21 +60,33 @@ export class QuizView extends Component {
                       {this.state.showCorrect === 1 
                         ? <Text>{elem.correctAnswer}Test Correct</Text> 
                         : <Text>{elem.incorrectAnswer}Test Incorrect</Text>}
-                      <TouchableOpacity
-                        style={styles.addBtn}
-                        onPress={() => this.answer(1)}
-                      >
-                        <Text>Correct</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.addBtn}
-                        onPress={() => this.answer(0)}
-                      >
-                        <Text>Incorrect</Text>
-                      </TouchableOpacity>
+                      
+                      
                     </View>
                   )
               })}
+              {this.state.cardIndex < this.state.deckDetails.questions.length
+                ? <View>
+                    <TouchableOpacity
+                      style={styles.addBtn}
+                      onPress={() => this.answer(1)}
+                    >
+                      <Text>Correct</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.addBtn}
+                      onPress={() => this.answer(0)}
+                    >
+                      <Text>Incorrect</Text>
+                    </TouchableOpacity>
+                  </View>
+                : <TouchableOpacity
+                    style={styles.addBtn}
+                    onPress={() => this.back()}
+                  >
+                    <Text>Back</Text>
+                  </TouchableOpacity>
+              }
             </View>
           :<Text>Loading...</Text>
         }

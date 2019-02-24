@@ -9,6 +9,9 @@ export class DeckView extends Component {
     deckLoaded : false, 
     deckDetails: {}
   }
+
+
+  
   componentDidMount() {
 
     AsyncStorage.getItem('DECK')

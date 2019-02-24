@@ -24,7 +24,7 @@ const Tabs = TabNavigator({
   History: {
     screen: DeckListView,
     navigationOptions: {
-      tabBarLabel: 'History',
+      tabBarLabel: 'Decks',
       //tabBarIcon: ({ tintColor }) => <Ionicons name='ios-bookmarks' size={30} color={tintColor}/>
     }
   },
