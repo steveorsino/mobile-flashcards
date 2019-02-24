@@ -49,8 +49,6 @@ export class QuizView extends Component {
         .then(setLocalNotification)
       this.setState({quizOver: true})
     }
-
-    console.log(` IS quizOver ${this.state.quizOver}`)
   }
 
 
