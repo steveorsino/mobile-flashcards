@@ -38,7 +38,7 @@ class DeckListView extends Component {
   }
   render() {
     return (
-      <View Style={styles.container}>
+      <View style={styles.container}>
         <ScrollView style={{backgroundColor: BACKGROUND_COLOR}}>
          {this.state.decks === undefined || Object.keys(this.state.decks).length === 0
           ? <View style={styles.container}>
