@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/colors'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
+import { TEXT_COLOR, APP_COLOR, BACKGROUND_COLOR } from '../utils/colors'
 import { getDecks, addCard } from '../utils/helpers'
 import { AsyncStorage } from 'react-native';
 
@@ -9,36 +9,39 @@ export class NewQuestionView extends Component {
     decks: {},
     deckToMod: '',
     question: '',
-    correctAns: '',
-    incorrectAns: ''
+    answer: ''
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Add a Card',
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: APP_COLOR,
+      }
+    }
   }
 
   handleQuestion = (text) =>{
     this.setState({question: text})
   }
-  handleCorrectAnswer = (text) => {
-    this.setState({correctAns: text})
-  }
-  handleIncorrectAnswer = (text) => {
-    this.setState({incorrectAns: text})
+  handleAnswer = (text) => {
+    this.setState({answer: text})
   }
   handleAddCard = () => {
     if (
       this.state.question === '' ||
-      this.state.correctAns === '' ||
-      this.state.incorrectAns == ''
+      this.state.answer === ''
     ) return alert('All fields Must be filled!')
     
     const card = {
       question: this.state.question,
-      correctAnswer: this.state.correctAns,
-      incorrectAns: this.state.incorrectAns
+      answer: this.state.answer
     }
 
     addCard(this.state.deckToMod, card)
       .then(() => {
         this.props.navigation.navigate('DeckView')
-        //redirect
       })
 
   }
@@ -61,39 +64,36 @@ export class NewQuestionView extends Component {
   }
   render() {
     return (
-      <View>
+      <View style={styles.container}>
       {
         this.state.deckToMod === ''
         ? <Text>Loading...</Text>
-        : <View>
-            <Text>Add a Card</Text>
-            <Text>To</Text>
-            <Text>{this.state.deckToMod}</Text>
-            <Text></Text>
+        : <KeyboardAvoidingView behavior="padding"  style={styles.container}>
+            <Text style={styles.testText}>Add a Card</Text>
+            <Text style={styles.testText}>To</Text>
+            <Text style={styles.testText}>{this.state.deckToMod}</Text>
             <TextInput
-              style={{height: 40}}
+              style={styles.textInput}
               placeholder="Question: "
               onChangeText={(text) => this.handleQuestion(text)}
             />
             <TextInput
-              style={{height: 40}}
-              placeholder="Correct Answer: "
-              onChangeText={(text) => this.handleCorrectAnswer(text)}
-            />
-            <TextInput
-              style={{height: 40}}
-              placeholder="Incorrect Answer: "
-              onChangeText={(text) => this.handleIncorrectAnswer(text)}
+              style={styles.textInput}
+              placeholder="Answer: "
+              onChangeText={(text) => this.handleAnswer(text)}
             />
             <TouchableOpacity
               style={styles.addBtn}
               onPress={() => this.handleAddCard()}
             >
-              <Text>Add Card</Text>
+              <Text style={styles.buttonTxt}>Add Card</Text>
             </TouchableOpacity>
-          </View>
+          </KeyboardAvoidingView>
       }
       </View>
+
+
+
     )
   }
 }
@@ -110,10 +110,26 @@ const styles = StyleSheet.create({
     color: TEXT_COLOR,
     fontSize: 30
   },
+  buttonTxt: {
+    color: 'white',
+    fontSize: 30,
+  },
   addBtn: {
-    borderColor: 'grey',
-    borderWidth: 1,
-  }
+    backgroundColor: TEXT_COLOR,
+    marginTop: 35,
+    paddingLeft: 15,
+    paddingRight: 15,
+    alignItems: 'center',
+    width: '60%'
+  },
+  textInput: {
+    height: 40,
+    padding:5,
+    width: 200,
+    marginTop: 25,
+    backgroundColor: 'white',
+    fontSize: 20,
+  },
 })
 
 export default NewQuestionView

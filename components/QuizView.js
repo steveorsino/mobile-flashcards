@@ -1,17 +1,29 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { AsyncStorage } from 'react-native';
-import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/colors'
-import { getDeck } from '../utils/helpers'
+import { BACKGROUND_COLOR, TEXT_COLOR, APP_COLOR } from '../utils/colors'
+import { getDeck, clearLocalNotification, setLocalNotification } from '../utils/helpers'
 
 export class QuizView extends Component {
   state = {
     deckLoaded : false, 
     deckDetails: {},
     cardIndex: 0,
-    showCorrect: 0,
-    numCorrect: 0
+    numCorrect: 0,
+    showAnswer: false,
+    quizOver: false
   }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Quiz',
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: APP_COLOR,
+      }
+    }
+  }
+
   componentDidMount() {
     AsyncStorage.getItem('DECK')
     .then((value) => {
@@ -20,72 +32,111 @@ export class QuizView extends Component {
         .then((value) => {
           this.setState({
             deckDetails: value,
-            deckLoaded: true,
-            showCorrect: Math.round(Math.random())
+            deckLoaded: true
           })
         })
     })
     .catch((err) => console.log(err))
   }
   answer = (ans) => {
-    if ((ans === this.state.showCorrect && ans === 1) || 
-        (ans === this.state.showCorrect && ans === 0)) {
-          console.log('Answer: ',ans)
-          console.log('Showing: ',this.state.showCorrect)
-          this.setState({numCorrect: this.state.numCorrect + 1})
-        }
-      
-    console.log("Number correct: ", this.state.numCorrect)
+    console.log('Answer: ',ans)
     this.setState({
+      numCorrect: this.state.numCorrect + ans,
       cardIndex: this.state.cardIndex + 1,
-      showCorrect: Math.round(Math.random())
+      showAnswer: false
     })
+    console.log(` IS ${this.state.cardIndex +1} <=  ${this.state.deckDetails.questions.length}?`)
+    console.log('screen: ',(this.state.cardIndex+1) <= this.state.deckDetails.questions.length)
+    if ((this.state.cardIndex + 1) === this.state.deckDetails.questions.length) {
+      clearLocalNotification()
+      .then(setLocalNotification)
+      this.setState({quizOver: true})
+    }
+
+    console.log(` IS quizOver ${this.state.quizOver}`)
   }
 
+
+
   back = () => {
-    this.props.navigation.navigate('Home')
+    this.props.navigation.navigate('DeckView')
   }
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         {this.state.deckLoaded
-          ? <View>
-              <Text>Quiz: Number correct: {this.state.numCorrect}</Text>
+          ? <View style={styles.container}>
+          
+              <Text style={styles.testText}>
+                {this.state.deckDetails.questions.length - this.state.cardIndex} remaining questions
+              </Text>
+              <Text style={styles.testText}>Number correct: {this.state.numCorrect}</Text>
               {this.state.deckDetails.questions.map((elem, index) => {
                   return (
-                    <View key={index} style={this.state.cardIndex !== index && {display: 'none'}}>
-                      <Text>Question #{index + 1}</Text>
-                      <Text>{elem.question}Test Question</Text>
-                      {this.state.showCorrect === 1 
-                        ? <Text>{elem.correctAnswer}Test Correct</Text> 
-                        : <Text>{elem.incorrectAnswer}Test Incorrect</Text>}
-                      
-                      
-                    </View>
+                    <View key={index} style={[styles.container, this.state.cardIndex !== index && {display: 'none'}]}>
+                      <Text style={styles.testText}>Question: {index + 1}</Text>
+                      <Text style={styles.qAndATxt}>{elem.question}</Text>
+                      {
+                        this.state.showAnswer
+                        ?  <View style={styles.container}>
+                            <Text style={styles.testText}>Answer</Text>
+                            <Text style={styles.qAndATxt}>{elem.answer}</Text>
+                            <TouchableOpacity
+                              style={styles.correctBtn}
+                              onPress={() => this.answer(1)}
+                            >
+                              <Text style={styles.buttonTxt}>Correct</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.incorrectBtn}
+                              onPress={() => this.answer(0)}
+                            >
+                              <Text style={styles.buttonTxt}>Incorrect</Text>
+                            </TouchableOpacity>
+                          </View>
+                        : <TouchableOpacity
+                            style={styles.addBtn}
+                            onPress={() => this.setState({showAnswer: true})}
+                          >
+                            <Text style={styles.buttonTxt}>See Answer</Text>
+                          </TouchableOpacity>
+                      }
+                   </View>
                   )
               })}
-              {this.state.cardIndex < this.state.deckDetails.questions.length
-                ? <View>
-                    <TouchableOpacity
-                      style={styles.addBtn}
-                      onPress={() => this.answer(1)}
-                    >
-                      <Text>Correct</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.addBtn}
-                      onPress={() => this.answer(0)}
-                    >
-                      <Text>Incorrect</Text>
-                    </TouchableOpacity>
-                  </View>
-                : <TouchableOpacity
-                    style={styles.addBtn}
-                    onPress={() => this.back()}
-                  >
-                    <Text>Back</Text>
-                  </TouchableOpacity>
+              {
+                this.state.quizOver &&
+                  (
+                    <View>
+                      <Text style={styles.quizEnd} >Quiz Ended</Text>
+                      <Text style={styles.quizPercent}>
+                        {((this.state.numCorrect/this.state.deckDetails.questions.length) * 100).toFixed(1)} %
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.addBtn}
+                        onPress={() => this.back()}
+                      >
+                        <Text style={styles.buttonTxt}>Back</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.addBtn}
+                        onPress={() => this.setState({
+                          cardIndex: 0,
+                          quizOver: false,
+                          numCorrect: 0,
+                        })}
+                      >
+                        <Text style={styles.buttonTxt}>Start Over</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.addBtn}
+                        onPress={() => this.props.navigation.navigate('Home')}
+                      >
+                        <Text style={styles.buttonTxt}>Home</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )
               }
             </View>
           :<Text>Loading...</Text>
@@ -106,9 +157,52 @@ const styles = StyleSheet.create({
     color: TEXT_COLOR,
     fontSize: 30
   },
+  qAndATxt: {
+    color: '#767A80',
+    fontSize: 25
+  },
+  buttonTxt: {
+    alignSelf: 'center',
+    color: 'white',
+    fontSize: 30,
+  },
+  quizEnd: {
+    marginTop: 40,
+    fontSize: 35,
+    color: '#83D86C'
+  },
+  quizPercent: {
+    marginTop: 5,
+    fontSize: 45,
+    alignSelf: 'center',
+    color: '#767A80'
+  },
+  correctBtn: {
+    backgroundColor: '#6FC456',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 25,
+    width: '80%',
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  incorrectBtn: {
+    backgroundColor: '#D55252',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 25,
+    width: '80%',
+    paddingLeft: 10,
+    paddingRight: 10
+  }, 
   addBtn: {
-    borderColor: 'grey',
-    borderWidth: 1,
+    backgroundColor: TEXT_COLOR,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 25,
+    width: '80%',
+    paddingLeft: 10,
+    paddingRight: 10
   }
 })
 export default QuizView

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/colors'
-import { createDeck, getDecks } from '../utils/helpers'
+import { createDeck } from '../utils/helpers'
 
 export class NewDeck extends Component {
   state = {
@@ -17,11 +17,9 @@ export class NewDeck extends Component {
       console.log(this.state.text)
       createDeck(this.state.text)
         .then(() => {
-          alert('YPU ADDED A DECK')
+          alert('YOU ADDED A DECK')
           this.props.navigation.navigate('Home')
         })
-      
-      //this.props.navigation.navigate('Home')
     } else {
       alert('You must enter a name for your new deck')
     }
@@ -32,7 +30,7 @@ export class NewDeck extends Component {
     return (
       <View style={styles.container}>
         <TextInput
-          style={{height: 40}}
+          style={styles.textInput}
           placeholder="Enter the name of your new deck!"
           onChangeText={(text) => this.handleTextChange(text)}
         />
@@ -54,13 +52,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  textInput: {
+    height: 40,
+    padding:5,
+    backgroundColor: 'white',
+    fontSize: 20,
+  },
   testText: {
-    color: TEXT_COLOR,
+    color: 'white',
     fontSize: 30
   },
   addBtn: {
-    borderColor: 'grey',
-    borderWidth: 1,
+    backgroundColor: TEXT_COLOR,
+    marginTop: 35,
+    alignItems: 'center',
+    width: '60%'
   }
 })
 

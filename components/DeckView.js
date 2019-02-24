@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { AsyncStorage } from 'react-native';
-import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/colors'
+import { BACKGROUND_COLOR, TEXT_COLOR, APP_COLOR } from '../utils/colors'
 import { getDeck } from '../utils/helpers'
 
 export class DeckView extends Component {
@@ -10,8 +10,16 @@ export class DeckView extends Component {
     deckDetails: {}
   }
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Deck View',
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: APP_COLOR,
+      }
+    }
+  }
 
-  
   componentDidMount() {
 
     AsyncStorage.getItem('DECK')
@@ -38,21 +46,21 @@ export class DeckView extends Component {
     return (
       <View style={styles.container}>
         {this.state.deckLoaded
-          ? <View>
+          ? <View style={styles.container}>
               <Text style={styles.testText}>{this.state.deckDetails.title}</Text>
-              <Text style={styles.testText}>{this.state.deckDetails.questions.length} cards</Text>
+              <Text style={styles.deckCards}>cards: {this.state.deckDetails.questions.length}</Text>
               <TouchableOpacity
                 style={styles.addBtn}
                 onPress={() => this.addQuestion(this.state.deckDetails.title)}
               >
-                <Text>Add Card</Text>
+                <Text style={styles.buttonTxt}>Add Card</Text>
               </TouchableOpacity>
               {this.state.deckDetails.questions.length > 0 &&
                 <TouchableOpacity
                 style={styles.addBtn}
                 onPress={() => this.goToQuiz()}
                 >
-                  <Text>Start Quiz</Text>
+                  <Text style={styles.buttonTxt}>Start Quiz</Text>
                 </TouchableOpacity>}
             </View>
           : <Text style={styles.testText}>Loading Deck</Text>}
@@ -69,13 +77,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  screenTxt: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   testText: {
     color: TEXT_COLOR,
     fontSize: 30
   },
+  buttonTxt: {
+    color: 'white',
+    fontSize: 30,
+  },
+  deckCards: {
+    color: TEXT_COLOR,
+    fontSize: 25
+  },
   addBtn: {
-    borderColor: 'grey',
-    borderWidth: 1,
+    backgroundColor: TEXT_COLOR,
+    marginTop: 35,
+    paddingLeft: 15,
+    paddingRight: 15,
+    alignItems: 'center',
+    width: '60%'
   }
 })
 

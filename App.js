@@ -1,16 +1,14 @@
 import React from 'react';
 import { StyleSheet, StatusBar, View, Text, Platform } from 'react-native';
-// import { Provider } from 'react-redux';
-// import { createStore } from 'redux';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import { APP_COLOR } from './utils/colors'
-//import Helpers from './utils/helpers'
 import { Constants } from 'expo'
 import DeckListView from './components/DeckListView'
 import NewDeck from './components/NewDeck'
 import DeckView from './components/DeckView'
 import NewQuestionView from './components/NewQuestionView'
 import QuizView from './components/QuizView'
+import { setLocalNotification } from './utils/helpers';
 
 AppStatusBar = ({ backgroundColor, ...props }) => {
   return (
@@ -25,14 +23,12 @@ const Tabs = TabNavigator({
     screen: DeckListView,
     navigationOptions: {
       tabBarLabel: 'Decks',
-      //tabBarIcon: ({ tintColor }) => <Ionicons name='ios-bookmarks' size={30} color={tintColor}/>
     }
   },
   NewDeck: {
     screen: NewDeck,
     navigationOptions: {
       tabBarLabel: 'Add Deck',
-      //tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={30} color={tintColor}/>
     }
   }
 }, {
@@ -81,18 +77,9 @@ const MainNavigator = StackNavigator({
 
 
 export default class App extends React.Component {
-  // componentDidMount() {
-    
-  //   const decks = Helpers.getDecks()
-  //   console.log('App: componentDidMount. Decks = ',decks);
-  //   if (decks) {
-  //     //set State
-  //     console.log('set the state')
-  //   } else {
-  //     console.log('No decks: ', decks)
-  //   }
-  // }
-
+  componentDidMount () {
+    setLocalNotification();
+  }
   render() {
     return (
       <View style={styles.container}>
