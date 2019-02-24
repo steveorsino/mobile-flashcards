@@ -12,7 +12,7 @@ export class NewQuestionView extends Component {
     answer: ''
   }
 
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: 'Add a Card',
       headerTintColor: 'white',
@@ -53,11 +53,9 @@ export class NewQuestionView extends Component {
         decks: value
       })
     }).then (() => {
-      console.log('State Decks = ',this.state.decks)
       AsyncStorage.getItem('ADD_QUESTION_DECK')
         .then((value) => {
           const dtm = JSON.parse(value)
-          console.log('Deck to modify = ',dtm)
           this.setState({deckToMod: dtm})
         })
     })
@@ -67,7 +65,7 @@ export class NewQuestionView extends Component {
       <View style={styles.container}>
       {
         this.state.deckToMod === ''
-        ? <Text>Loading...</Text>
+        ? <Text style={styles.testText} >Loading...</Text>
         : <KeyboardAvoidingView behavior="padding"  style={styles.container}>
             <Text style={styles.testText}>Add a Card</Text>
             <Text style={styles.testText}>To</Text>
@@ -91,9 +89,6 @@ export class NewQuestionView extends Component {
           </KeyboardAvoidingView>
       }
       </View>
-
-
-
     )
   }
 }

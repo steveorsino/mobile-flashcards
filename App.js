@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, StatusBar, View, Text, Platform } from 'react-native';
+import { StyleSheet, StatusBar, View, Platform } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import { APP_COLOR } from './utils/colors'
 import { Constants } from 'expo'

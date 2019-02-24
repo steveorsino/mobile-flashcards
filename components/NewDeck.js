@@ -9,12 +9,10 @@ export class NewDeck extends Component {
   }
   handleTextChange (text) {
     this.setState({text})
-    console.log(this.state.text)
   }
 
   handleAddDeck () {
     if (this.state.text.length > 0) {
-      console.log(this.state.text)
       createDeck(this.state.text)
         .then(() => {
           alert('YOU ADDED A DECK')

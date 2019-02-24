@@ -14,7 +14,7 @@ export class QuizView extends Component {
     quizOver: false
   }
 
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: 'Quiz',
       headerTintColor: 'white',
@@ -39,17 +39,14 @@ export class QuizView extends Component {
     .catch((err) => console.log(err))
   }
   answer = (ans) => {
-    console.log('Answer: ',ans)
     this.setState({
       numCorrect: this.state.numCorrect + ans,
       cardIndex: this.state.cardIndex + 1,
       showAnswer: false
     })
-    console.log(` IS ${this.state.cardIndex +1} <=  ${this.state.deckDetails.questions.length}?`)
-    console.log('screen: ',(this.state.cardIndex+1) <= this.state.deckDetails.questions.length)
     if ((this.state.cardIndex + 1) === this.state.deckDetails.questions.length) {
       clearLocalNotification()
-      .then(setLocalNotification)
+        .then(setLocalNotification)
       this.setState({quizOver: true})
     }
 
