@@ -24,9 +24,8 @@ export class NewDeck extends Component {
     } else {
       alert('You must enter a name for your new deck')
     }
-
-
   }
+  
   render() {
     return (
       <View style={styles.container}>
