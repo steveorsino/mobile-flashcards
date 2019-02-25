@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/colors'
 import { createDeck } from '../utils/helpers'
 
@@ -15,8 +16,10 @@ export class NewDeck extends Component {
     if (this.state.text.length > 0) {
       createDeck(this.state.text)
         .then(() => {
-          alert('YOU ADDED A DECK')
-          this.props.navigation.navigate('Home')
+          AsyncStorage.setItem('DECK', JSON.stringify(this.state.text))
+            .then(() => {
+              this.props.navigation.navigate('DeckView')
+            })
         })
     } else {
       alert('You must enter a name for your new deck')
